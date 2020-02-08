@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Swagger Endpoints</title>
+</head>
+<body>
+<form action="#" th:action="@{/admin/add-swagger.html}" th:object="${swaggerSpec}" method="post">
+    <label for="name">Name</label>
+    <input type="text" th:field="*{name}" id="name" placeholder="Name">
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+    <label for="email">Swagger Json url</label>
+    <input type="text" th:field="*{url}" id="email" placeholder="URL">
+    <span th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></span>
+
+    <label for="name">Version</label>
+    <input type="text" th:field="*{version}" value="2.0" id="version" placeholder="Version">
+    <span th:if="${#fields.hasErrors('version')}" th:errors="*{version}"></span>
+
+    <label for="email">Priority</label>
+    <input type="text" th:field="*{priority}" id="priority" placeholder="priority">
+    <span th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></span>
+    <input type="submit" value="Add Swagger">
+</form>
+</body>
+</html>
