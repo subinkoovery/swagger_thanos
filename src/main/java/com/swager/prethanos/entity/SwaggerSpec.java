@@ -1,15 +1,18 @@
 package com.swager.prethanos.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "SWAGGER_SPEC")
 public class SwaggerSpec {
 
@@ -18,6 +21,7 @@ public class SwaggerSpec {
     Long id;
     String name;
     String url;
+    @NotEmpty
     String version;
-    String priority;
+    Integer priority;
 }

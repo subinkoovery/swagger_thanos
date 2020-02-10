@@ -21,7 +21,8 @@ public class ManagementController {
     @GetMapping("/index.html")
     public String getManagementData(SwaggerSpec swaggerSpec, Model model) {
 
-        model.addAttribute("swaggerSpecList", swaggerSpecRepository.findAll());
+        model.addAttribute("swaggerSpecList", swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc());
+        model.addAttribute("swaggerSpec",getSwaggerSpec());
         return "management";
     }
 
@@ -29,6 +30,7 @@ public class ManagementController {
     public String addSwaggerSpec(SwaggerSpec swaggerSpec, Model model) {
 
         swaggerSpecRepository.save(swaggerSpec);
+        model.addAttribute("swaggerSpec",getSwaggerSpec());
         return "redirect:/admin/index.html";
     }
 
@@ -42,7 +44,13 @@ public class ManagementController {
     @GetMapping("/delete.html/{specId}")
     public String deleteSwagger(Model model, @PathVariable("specId") Long specId) {
         swaggerSpecRepository.deleteById(specId);
-        model.addAttribute("swaggerSpec", new SwaggerSpec());
+        model.addAttribute("swaggerSpec", getSwaggerSpec());
         return "redirect:/admin/index.html";
+    }
+
+    private SwaggerSpec getSwaggerSpec(){
+
+        return SwaggerSpec.builder().priority(100).version("2.0").build();
+
     }
 }

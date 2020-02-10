@@ -28,10 +28,10 @@ public class SwaggerWsEndpointsConfig {
 
             List<SwaggerResource> resources = new ArrayList<>();
             log.info("Available swagger definition : "+swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc().size());
-            for (SwaggerSpec swaggerSpec:swaggerSpecRepository.findAll()){
+            for (SwaggerSpec swaggerSpec:swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc()){
                 SwaggerResource wsResource = new SwaggerResource();
                 wsResource.setName(swaggerSpec.getName());
-                wsResource.setSwaggerVersion(swaggerSpec.getVersion());
+                wsResource.setSwaggerVersion(String.valueOf(swaggerSpec.getVersion()));
                 wsResource.setUrl(swaggerSpec.getUrl());
 
 
