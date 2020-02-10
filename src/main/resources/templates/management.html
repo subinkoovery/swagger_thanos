@@ -9,61 +9,106 @@
     <script src="bootstrap.min.js"/>-->
 
 </head>
-<body>
-    <div>
-        <form class="container" action="#" th:action="@{/admin/add-swagger.html}" th:object="${swaggerSpec}" method="post">
-            <div class="row ">
-                <div class="form-group col">
-                    <label for="name">Name</label>
-                    <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Name">
-                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="index.html">Swagger Definitions</a>
+
+    </nav>
+
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+
+                </div>
+                <div class="sb-sidenav-footer">
+
+                </div>
+            </nav>
+        </div>
+        <!-- Content goes here-->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid">
+                    <form class="container padding-top" action="#" style="padding-top: 20px;" th:action="@{/admin/add-swagger.html}" th:object="${swaggerSpec}" method="post">
+                        <div class="row ">
+                            <div class="form-group col">
+                                <label for="name">Name</label>
+                                <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Name">
+                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                            </div>
+
+                            <div class="form-group col">
+                                <label for="email">Swagger Json url</label>
+                                <input type="text" class="form-control" th:field="*{url}" id="email" placeholder="URL">
+                                <span th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></span>
+                            </div>
+
+                            <div class="form-group col">
+                                <label for="name">Version</label>
+                                <input type="text" class="form-control" th:field="*{version}" value="2.0" id="version" placeholder="Version">
+                                <span th:if="${#fields.hasErrors('version')}" th:errors="*{version}"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-4 row">
+                            <label for="email">Priority</label>
+                            <input type="text" class="form-control" th:field="*{priority}" id="priority" placeholder="priority">
+                            <span th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></span>
+                        </div>
+
+                        <input type="text" hidden="true" th:field="*{id}" id="id">
+                        <input type="submit"  class="btn btn-primary" value="Add Swagger">
+                    </form>
+
+                    <div>
+
+                    </div>
+
+
+                    <div class="container mt-5">
+                        <ol class="card-header">
+                            Available swagger definitions
+                        </ol>
+                        <table th:if="${not #lists.isEmpty(swaggerSpecList)}" class="table table-responsive">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Json Url</th>
+                                <th scope="col">Version</th>
+                                <th scope="col">Priority</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <th:block th:each="swaggerSpec : ${swaggerSpecList}">
+                                <tr>
+                                    <td scope="row" th:text="${swaggerSpec.name}"></td>
+                                    <td  th:text="${swaggerSpec.url}"></td>
+                                    <td  th:text="${swaggerSpec.version}"></td>
+                                    <td th:text="${swaggerSpec.priority}"></td>
+                                    <td><a th:href="@{'/admin/edit.html/' + ${swaggerSpec.id}}">Edit</a></td>
+                                    <td><a th:href="@{'/admin/delete.html/' + ${swaggerSpec.id}}">Delete</a></td>
+                                </tr>
+                            </th:block>
+                        </table>
+                    </div>
+
+
                 </div>
 
-                <div class="form-group col">
-                    <label for="email">Swagger Json url</label>
-                    <input type="text" class="form-control" th:field="*{url}" id="email" placeholder="URL">
-                    <span th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></span>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center justify-content-between small">
+                    </div>
                 </div>
-
-                <div class="form-group col">
-                    <label for="name">Version</label>
-                    <input type="text" class="form-control" th:field="*{version}" value="2.0" id="version" placeholder="Version">
-                    <span th:if="${#fields.hasErrors('version')}" th:errors="*{version}"></span>
-                </div>
-            </div>
-
-            <div class="form-group col-4 row">
-                <label for="email">Priority</label>
-                <input type="text" class="form-control" th:field="*{priority}" id="priority" placeholder="priority">
-                <span th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></span>
-            </div>
-
-            <input type="text" hidden="true" th:field="*{id}" id="id">
-            <input type="submit"  class="btn btn-primary" value="Add Swagger">
-        </form>
+            </footer>
+        </div>
     </div>
 
-<div>
-    <table style="width:50%" th:if="${not #lists.isEmpty(swaggerSpecList)}" class="table">
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Json Url</th>
-            <th scope="col">Version</th>
-            <th scope="col">Priority</th>
-            <td></td>
-            <td></td>
-        </tr>
-        <th:block th:each="swaggerSpec : ${swaggerSpecList}">
-            <tr>
-                <td scope="row" th:text="${swaggerSpec.name}"></td>
-                <td scope="row" th:text="${swaggerSpec.url}"></td>
-                <td scope="row" th:text="${swaggerSpec.version}"></td>
-                <td scope="row" th:text="${swaggerSpec.priority}"></td>
-                <td><a th:href="@{'/admin/edit.html/' + ${swaggerSpec.id}}">Edit</a></td>
-                <td><a th:href="@{'/admin/delete.html/' + ${swaggerSpec.id}}">Delete</a></td>
-            </tr>
-        </th:block>
-    </table>
-</div>
+    <div>
+
+    </div>
+
+
 </body>
 </html>
