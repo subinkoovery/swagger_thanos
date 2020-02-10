@@ -12,6 +12,18 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand" href="index.html">Swagger Definitions</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin/index.html}">Home <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-5 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/swagger-ui.html}">Swagger UI <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
 
     </nav>
 
@@ -32,29 +44,33 @@
                 <div class="container-fluid">
                     <form class="container padding-top" action="#" style="padding-top: 20px;" th:action="@{/admin/add-swagger.html}" th:object="${swaggerSpec}" method="post">
                         <div class="row ">
-                            <div class="form-group col">
+                            <div class="form-group col-4">
                                 <label for="name">Name</label>
                                 <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Name">
                                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
                             </div>
 
-                            <div class="form-group col">
+                            <div class="form-group col-8">
                                 <label for="email">Swagger Json url</label>
                                 <input type="text" class="form-control" th:field="*{url}" id="email" placeholder="URL">
                                 <span th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></span>
+                                <small id="emailHelp" class="form-text text-muted">Eg. https://your-domain.com/api/v2/api-docs</small>
                             </div>
 
-                            <div class="form-group col">
-                                <label for="name">Version</label>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-group col-4">
+                                <label for="name">Swagger Version</label>
                                 <input type="text" class="form-control" th:field="*{version}" value="2.0" id="version" placeholder="Version">
                                 <span th:if="${#fields.hasErrors('version')}" th:errors="*{version}"></span>
                             </div>
-                        </div>
-
-                        <div class="form-group col-4 row">
-                            <label for="email">Priority</label>
-                            <input type="text" class="form-control" th:field="*{priority}" id="priority" placeholder="priority">
-                            <span th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></span>
+                            <div class="form-group col-4">
+                                <label for="email">Priority</label>
+                                <input type="text" class="form-control" th:field="*{priority}" id="priority" placeholder="priority">
+                                <span th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></span>
+                            </div>
                         </div>
 
                         <input type="text" hidden="true" th:field="*{id}" id="id">
@@ -66,11 +82,11 @@
                     </div>
 
 
-                    <div class="container mt-5">
+                    <div class="container mt-5" th:if="${not #lists.isEmpty(swaggerSpecList)}">
                         <ol class="card-header">
                             Available swagger definitions
                         </ol>
-                        <table th:if="${not #lists.isEmpty(swaggerSpecList)}" class="table table-responsive">
+                        <table  class="table table-responsive">
                             <tr>
                                 <th scope="col">Name</th>
                                 <th scope="col">Json Url</th>
@@ -96,12 +112,7 @@
                 </div>
 
             </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid">
-                    <div class="d-flex align-items-center justify-content-between small">
-                    </div>
-                </div>
-            </footer>
+
         </div>
     </div>
 
@@ -111,4 +122,10 @@
 
 
 </body>
+<!--<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-between small">
+        </div>
+    </div>
+</footer>-->
 </html>

@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface SwaggerSpecRepository extends JpaRepository<SwaggerSpec, Long> {
 
-    List<SwaggerSpec> findAllByOrderByPriority();
+    List<SwaggerSpec> findAllByOrderByPriorityAscNameAsc();
 }
