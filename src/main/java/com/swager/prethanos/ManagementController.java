@@ -1,8 +1,14 @@
 package com.swager.prethanos;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swager.prethanos.entity.SwaggerSpec;
+import com.swager.prethanos.model.Dashboard;
+import com.swager.prethanos.model.MicroService;
+import com.swager.prethanos.model.SwaggerSchema;
 import com.swager.prethanos.repository.SwaggerSpecRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +16,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 @RequestMapping("admin")
 @Controller
 public class ManagementController {
 
     @Autowired
     SwaggerSpecRepository swaggerSpecRepository;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
 
     @GetMapping("/index.html")
@@ -48,9 +62,60 @@ public class ManagementController {
         return "redirect:/admin/index.html";
     }
 
+    @GetMapping("/dashboard.html")
+    public String getDashBoard(Model model) {
+
+        List<MicroService> microServiceList=getMicroServiceDetail();
+        model.addAttribute("microServiceList", getMicroServiceDetail());
+        model.addAttribute("dashBoard",getDashboardData(microServiceList));
+        return "dashboard";
+    }
+
+    private Dashboard getDashboardData(List<MicroService> microServiceList){
+
+       long microServiceCount= microServiceList.stream()
+                .filter(microService -> microService.getNoOfAPIs()!=null)
+                .map(e->e.getNoOfAPIs())
+                .reduce((e1,e2)->e1+e2).orElse(0L);
+
+        return  Dashboard.builder()
+                .noOfMicroservice(microServiceList.size())
+                .totalNoOfAPIs(microServiceCount)
+                .build();
+    }
+
+    private List<MicroService> getMicroServiceDetail(){
+        List<MicroService> microServiceList=new ArrayList<>();
+
+        for (SwaggerSpec swaggerSpec:swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc()){
+
+            MicroService microService=MicroService.builder()
+                    .name(swaggerSpec.getName())
+                    .noOfAPIs(getNoOfAPIs(swaggerSpec.getUrl()))
+                    .build();
+            microServiceList.add(microService);
+        }
+
+        return microServiceList;
+    }
+
     private SwaggerSpec getSwaggerSpec(){
 
         return SwaggerSpec.builder().priority(100).version("2.0").build();
 
+    }
+
+    private Long getNoOfAPIs(String jsonUrl)  {
+        Resource res = new ClassPathResource(jsonUrl);
+        SwaggerSchema swaggerSchema;
+        try {
+            swaggerSchema = objectMapper.readValue(new URL(jsonUrl), SwaggerSchema.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return swaggerSchema.getPaths()!=null? swaggerSchema.getPaths().entrySet().stream()
+                .flatMap(e->e.getValue().entrySet().stream())
+                .count(): null;
     }
 }

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Swagger Endpoints</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <!--<script src="jquery-3.4.1.slim.min.js"}/>
+    <script src="popper.min.js"/>
+    <script src="bootstrap.min.js"/>-->
+
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <a class="navbar-brand" href="index.html">Swagger Definitions</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/admin/index.html}">Home <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-5 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/swagger-ui.html}">Swagger UI <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+
+</nav>
+
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+
+            </div>
+            <div class="sb-sidenav-footer">
+
+            </div>
+        </nav>
+    </div>
+
+
+    <!-- Content goes here-->
+    <div id="layoutSidenav_content">
+        <main>
+
+            <div class="container">
+                <h1 class="mt-4">Dashboard</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+                <div class="row">
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card bg-primary text-white mb-4">
+                            <div class="card-body">Microservices</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="display-1 text-white stretched-link" th:text="${dashBoard.noOfMicroservice}"></a>
+                                <div class="small text-white"><svg class="svg-inline--fa fa-angle-right fa-w-8" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg><!-- <i class="fas fa-angle-right"></i> --></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card bg-success text-white mb-4">
+                            <div class="card-body">Available APIs</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="display-1 text-white stretched-link" th:text="${dashBoard.totalNoOfAPIs}" ></a>
+                                <div class="small text-white"><svg class="svg-inline--fa fa-angle-right fa-w-8" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg><!-- <i class="fas fa-angle-right"></i> --></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container mt-5" style="width:100%" th:if="${not #lists.isEmpty(microServiceList)}">
+                    <table  class="table">
+                        <tr>
+                            <th scope="col">Micro Service</th>
+                            <th scope="col">Total APIs</th>
+                        </tr>
+                        <th:block th:each="microService : ${microServiceList}">
+                            <tr>
+                                <td scope="row" th:text="${microService.name}"></td>
+                                <td  th:text="${microService.noOfAPIs}"></td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

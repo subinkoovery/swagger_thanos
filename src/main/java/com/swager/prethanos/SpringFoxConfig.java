@@ -1,5 +1,6 @@
 package com.swager.prethanos;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,6 +25,11 @@ public class SpringFoxConfig {
           .apis(RequestHandlerSelectors.any())
           .paths(PathSelectors.any())
           .build();                                           
+    }
+
+    @Bean
+    public ObjectMapper getObjectMapper() {
+        return new ObjectMapper();
     }
 
 

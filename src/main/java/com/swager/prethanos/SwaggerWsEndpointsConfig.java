@@ -27,18 +27,14 @@ public class SwaggerWsEndpointsConfig {
         return () -> {
 
             List<SwaggerResource> resources = new ArrayList<>();
-            log.info("Available swagger definition : "+swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc().size());
-            for (SwaggerSpec swaggerSpec:swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc()){
+            log.info("Available swagger definition : " + swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc().size());
+            for (SwaggerSpec swaggerSpec : swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc()) {
                 SwaggerResource wsResource = new SwaggerResource();
                 wsResource.setName(swaggerSpec.getName());
                 wsResource.setSwaggerVersion(String.valueOf(swaggerSpec.getVersion()));
                 wsResource.setUrl(swaggerSpec.getUrl());
-
-
                 resources.add(wsResource);
-
             }
-
             return resources;
         };
     }
