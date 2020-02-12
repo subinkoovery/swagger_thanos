@@ -7,8 +7,6 @@ import com.swager.prethanos.model.MicroService;
 import com.swager.prethanos.model.SwaggerSchema;
 import com.swager.prethanos.repository.SwaggerSpecRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,12 +86,7 @@ public class ManagementController {
         List<MicroService> microServiceList=new ArrayList<>();
 
         for (SwaggerSpec swaggerSpec:swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc()){
-
-            MicroService microService=MicroService.builder()
-                    .name(swaggerSpec.getName())
-                    .noOfAPIs(getNoOfAPIs(swaggerSpec.getUrl()))
-                    .build();
-            microServiceList.add(microService);
+            microServiceList.add(getMicroservice(swaggerSpec));
         }
 
         return microServiceList;
@@ -105,17 +98,25 @@ public class ManagementController {
 
     }
 
-    private Long getNoOfAPIs(String jsonUrl)  {
-        Resource res = new ClassPathResource(jsonUrl);
+    private MicroService getMicroservice(SwaggerSpec swaggerSpec)  {
+
+        MicroService microService=MicroService.builder()
+                .name(swaggerSpec.getName())
+                .build();
+
         SwaggerSchema swaggerSchema;
         try {
-            swaggerSchema = objectMapper.readValue(new URL(jsonUrl), SwaggerSchema.class);
+            swaggerSchema = objectMapper.readValue(new URL(swaggerSpec.getUrl()), SwaggerSchema.class);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            microService.setError(e.getLocalizedMessage());
+            microService.setAssociatedSpecId(swaggerSpec.getId());
+            return microService;
         }
-        return swaggerSchema.getPaths()!=null? swaggerSchema.getPaths().entrySet().stream()
+        long noOfUrl= swaggerSchema.getPaths()!=null? swaggerSchema.getPaths().entrySet().stream()
                 .flatMap(e->e.getValue().entrySet().stream())
-                .count(): null;
+                .count():0L;
+        microService.setNoOfAPIs(noOfUrl);
+
+        return microService;
     }
 }

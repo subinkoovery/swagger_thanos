@@ -10,5 +10,7 @@ public class MicroService {
     String name;
     Long noOfAPIs;
     Long noOfReusableAPIs;
+    String error;
+    Long associatedSpecId;
 
 }

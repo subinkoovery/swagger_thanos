@@ -79,7 +79,10 @@
                         <th:block th:each="microService : ${microServiceList}">
                             <tr>
                                 <td scope="row" th:text="${microService.name}"></td>
-                                <td  th:text="${microService.noOfAPIs}"></td>
+                                <td th:if="${!#strings.isEmpty(microService.noOfAPIs)}" th:text="${microService.noOfAPIs}"></td>
+                                <td  >
+                                    <a class="text-danger" th:if="${!#strings.isEmpty(microService.error)}" data-toggle="tooltip" th:title="${microService.error}" th:href="@{'/admin/edit.html/' + ${microService.associatedSpecId}}">Error</a>
+                                </td>
                             </tr>
                         </th:block>
                     </table>
