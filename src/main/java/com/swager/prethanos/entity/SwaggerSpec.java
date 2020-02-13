@@ -24,4 +24,6 @@ public class SwaggerSpec {
     @NotEmpty
     String version;
     Integer priority;
+    Long totalNoOfEndpoints;
+    String error;
 }

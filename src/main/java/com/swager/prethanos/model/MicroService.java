@@ -2,9 +2,10 @@ package com.swager.prethanos.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class MicroService {
 
     String name;
@@ -12,5 +13,4 @@ public class MicroService {
     Long noOfReusableAPIs;
     String error;
     Long associatedSpecId;
-
 }

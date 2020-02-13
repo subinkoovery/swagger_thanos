@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestMapping("admin")
 @Controller
@@ -34,7 +34,7 @@ public class ManagementController {
     public String getManagementData(SwaggerSpec swaggerSpec, Model model) {
 
         model.addAttribute("swaggerSpecList", swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc());
-        model.addAttribute("swaggerSpec",getSwaggerSpec());
+        model.addAttribute("swaggerSpec", getSwaggerSpec());
         return "management";
     }
 
@@ -42,7 +42,7 @@ public class ManagementController {
     public String addSwaggerSpec(SwaggerSpec swaggerSpec, Model model) {
 
         swaggerSpecRepository.save(swaggerSpec);
-        model.addAttribute("swaggerSpec",getSwaggerSpec());
+        model.addAttribute("swaggerSpec", getSwaggerSpec());
         return "redirect:/admin/index.html";
     }
 
@@ -63,60 +63,64 @@ public class ManagementController {
     @GetMapping("/dashboard.html")
     public String getDashBoard(Model model) {
 
-        List<MicroService> microServiceList=getMicroServiceDetail();
+        List<MicroService> microServiceList = getMicroServiceDetail();
         model.addAttribute("microServiceList", getMicroServiceDetail());
-        model.addAttribute("dashBoard",getDashboardData(microServiceList));
+        model.addAttribute("dashBoard", getDashboardData(microServiceList));
         return "dashboard";
     }
 
-    private Dashboard getDashboardData(List<MicroService> microServiceList){
+    /**
+     * Get dashboard data based on the micro service detail.
+     * @param microServiceList microServiceList
+     * @return Dashboard
+     */
+    private Dashboard getDashboardData(List<MicroService> microServiceList) {
 
-       long microServiceCount= microServiceList.stream()
-                .filter(microService -> microService.getNoOfAPIs()!=null)
-                .map(e->e.getNoOfAPIs())
-                .reduce((e1,e2)->e1+e2).orElse(0L);
+        long microServiceCount = microServiceList.stream()
+                .filter(microService -> microService.getNoOfAPIs() != null)
+                .map(e -> e.getNoOfAPIs())
+                .reduce((e1, e2) -> e1 + e2).orElse(0L);
 
-        return  Dashboard.builder()
+        return Dashboard.builder()
                 .noOfMicroservice(microServiceList.size())
                 .totalNoOfAPIs(microServiceCount)
                 .build();
     }
 
-    private List<MicroService> getMicroServiceDetail(){
-        List<MicroService> microServiceList=new ArrayList<>();
-
-        for (SwaggerSpec swaggerSpec:swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc()){
-            microServiceList.add(getMicroservice(swaggerSpec));
-        }
-
-        return microServiceList;
+    private List<MicroService> getMicroServiceDetail() {
+        return swaggerSpecRepository.findAllByOrderByPriorityAscNameAsc().parallelStream()
+                .map(e -> getMicroServiceDetail(e))
+                .collect(Collectors.toList());
     }
 
-    private SwaggerSpec getSwaggerSpec(){
+
+    private SwaggerSpec getSwaggerSpec() {
 
         return SwaggerSpec.builder().priority(100).version("2.0").build();
 
     }
 
-    private MicroService getMicroservice(SwaggerSpec swaggerSpec)  {
-
-        MicroService microService=MicroService.builder()
-                .name(swaggerSpec.getName())
-                .build();
+    /**
+     * This method returns micro service detail from Swagger spec.
+     * @param swaggerSpec SwaggerSpec
+     * @return MicroService
+     */
+    private MicroService getMicroServiceDetail(SwaggerSpec swaggerSpec) {
 
         SwaggerSchema swaggerSchema;
+        MicroService microService = new MicroService();
+        microService.setName(swaggerSpec.getName());
         try {
             swaggerSchema = objectMapper.readValue(new URL(swaggerSpec.getUrl()), SwaggerSchema.class);
-        } catch (IOException e) {
-            microService.setError(e.getLocalizedMessage());
-            microService.setAssociatedSpecId(swaggerSpec.getId());
-            return microService;
-        }
-        long noOfUrl= swaggerSchema.getPaths()!=null? swaggerSchema.getPaths().entrySet().stream()
-                .flatMap(e->e.getValue().entrySet().stream())
-                .count():0L;
-        microService.setNoOfAPIs(noOfUrl);
+            long noOfApis = swaggerSchema.getPaths() != null ? swaggerSchema.getPaths().entrySet().stream()
+                    .flatMap(e -> e.getValue().entrySet().stream())
+                    .count() : 0L;
+            microService.setNoOfAPIs(noOfApis);
 
+        } catch (IOException e) {
+
+            microService.setError(e.getLocalizedMessage());
+        }
         return microService;
     }
 }
