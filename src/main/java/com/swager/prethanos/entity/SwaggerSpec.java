@@ -24,6 +24,9 @@ public class SwaggerSpec {
     @NotEmpty
     String version;
     Integer priority;
-    Long totalNoOfEndpoints;
     String error;
+    @Column(columnDefinition = "boolean default false")
+    Boolean isAuthRequired;
+    String userName;
+    String password;
 }
