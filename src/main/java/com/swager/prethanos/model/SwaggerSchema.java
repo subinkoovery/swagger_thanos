@@ -7,6 +7,10 @@ import lombok.Data;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class to hold the swagger json schema.
+ * @author Subin Chalil
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SwaggerSchema {

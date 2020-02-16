@@ -15,6 +15,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Swagger configuration class.
+ */
 @Configuration
 @EnableSwagger2
 public class SpringFoxConfig {                                    

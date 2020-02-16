@@ -25,6 +25,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author Subin Chalil
+ */
 @RequestMapping("admin")
 @Controller
 public class ManagementController {

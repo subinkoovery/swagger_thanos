@@ -14,6 +14,10 @@ import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class defines the custom swagger definitions.
+ * @author SubinC
+ */
 @Configuration
 @Slf4j
 public class SwaggerWsEndpointsConfig {

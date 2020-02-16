@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * Class to Persist swagger json.
+ * @author Subin Chalil
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
