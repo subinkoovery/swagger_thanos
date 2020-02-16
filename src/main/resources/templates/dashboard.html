@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <title>Manage Swagger Endpoints</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet" />
-    <!--<script src="jquery-3-4.js"}/>
-    <script src="popper.min.js"/>
-    <script src="bootstrap.min.js"/>-->
 
 
 </head>
@@ -79,8 +76,12 @@
                         </tr>
                         <th:block th:each="microService : ${microServiceList}">
                             <tr>
-                                <td scope="row" th:text="${microService.name}"></td>
-                                <td th:if="${!#strings.isEmpty(microService.noOfAPIs)}" th:text="${microService.noOfAPIs}"></td>
+                                <td scope="row">
+                                    <a th:text="${microService.name}" target="_blank" th:href="@{'/swagger-ui.html?urls.primaryName='+${microService.name}}"></a>
+                                </td>
+                                <td th:if="${!#strings.isEmpty(microService.noOfAPIs)}" >
+                                    <h6 th:text="${microService.noOfAPIs}"></h6>
+                                </td>
                                 <td  th:if="${#strings.isEmpty(microService.noOfAPIs)}" >
                                     <a class="text-danger" th:if="${!#strings.isEmpty(microService.error)}" data-toggle="tooltip" th:title="${microService.error}" th:href="@{'/admin/edit.html/' + ${microService.associatedSpecId}}">Error</a>
                                 </td>

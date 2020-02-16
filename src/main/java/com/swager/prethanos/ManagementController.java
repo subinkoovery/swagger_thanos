@@ -73,7 +73,7 @@ public class ManagementController {
     public String getDashBoard(Model model) {
 
         List<MicroService> microServiceList = getMicroServiceDetail();
-        model.addAttribute("microServiceList", getMicroServiceDetail());
+        model.addAttribute("microServiceList", microServiceList);
         model.addAttribute("dashBoard", getDashboardData(microServiceList));
         return "dashboard";
     }

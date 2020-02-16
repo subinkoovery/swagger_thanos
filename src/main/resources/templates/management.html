@@ -140,7 +140,9 @@
                             </tr>
                             <th:block th:each="swaggerSpec : ${swaggerSpecList}">
                                 <tr>
-                                    <td scope="row" th:text="${swaggerSpec.name}"></td>
+                                    <td scope="row">
+                                        <a th:text="${swaggerSpec.name}" target="_blank" th:href="@{'/swagger-ui.html?urls.primaryName='+${swaggerSpec.name}}"></a>
+                                    </td>
                                     <td  th:text="${swaggerSpec.url}"></td>
                                     <td  th:text="${swaggerSpec.version}"></td>
                                     <td th:text="${swaggerSpec.priority}"></td>
